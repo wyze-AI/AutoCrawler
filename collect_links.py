@@ -26,6 +26,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import os.path as osp
 
+from urllib.parse import quote_plus
+
 
 class CollectLinks:
     def __init__(self, no_gui=False):
@@ -207,8 +209,11 @@ class CollectLinks:
 
     def google_full(self, keyword, add_url=""):
         print('[Full Resolution Mode]')
-
-        self.browser.get("https://www.google.com/search?q={}&tbm=isch{}".format(keyword, add_url))
+        if keyword.startswith('http'):
+            query=quote_plus('site:%s' % keyword)
+        else:
+            query=quote_plus(keyword)
+        self.browser.get("https://www.google.com/search?q={}&tbm=isch{}".format(query, add_url))
         time.sleep(1)
 
         elem = self.browser.find_element_by_tag_name("body")
